@@ -208,13 +208,12 @@ public:
      * Delete the min from the heap and rebalances
      * @param min : stores the deleted [vertex, distance]
      */
-    int* DeleteMin() {
+    int* DeleteMin(int min[2]) {
         if (IsEmpty()) {
             std::cout << "Warning! There are no elements in the heap currently." << std::endl;
             return 0;
         }
 
-        int min[2];
         min[0] = array[0][0];
         min[1] = array[0][1];
         
