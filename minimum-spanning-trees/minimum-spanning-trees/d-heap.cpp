@@ -7,7 +7,6 @@
 
 #include "d-heap.hpp"
 #include <iostream>
-#include<algorithm>
 
 class DHeap {
     private:

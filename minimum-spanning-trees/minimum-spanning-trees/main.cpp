@@ -11,7 +11,6 @@
 #include <math.h>
 #include <iomanip>
 #include <array>
-#include <algorithm>
 
 using namespace std;
 
@@ -145,7 +144,7 @@ public:
         size = capacity + 1;
         current_size = 0;
         d = num_children;
-        array = new int* [capacity + 1];
+        array = new int* [capacity];
         for (int i = 0 ; i < capacity + 1; i++) {
             array[i] = new int[2];
         }
@@ -189,8 +188,8 @@ public:
             return;
         }
 
-        int new_heap_elem[2] = {vertex, distance};
-        array[current_size] = new_heap_elem;
+        array[current_size][0] = vertex;
+        array[current_size][1] = distance;
         
         BubbleUp(current_size);
         current_size++;
@@ -213,7 +212,7 @@ public:
     void BubbleUp(int insert_pos) {
         while (insert_pos > 0 && array[insert_pos][1] < array[GetParent(insert_pos)][1]) {
             int parent = GetParent(insert_pos);
-            std::iter_swap(array[insert_pos], array[parent]);
+            std::swap(array[insert_pos], array[parent]);
             insert_pos = parent;
         }
     }
@@ -222,6 +221,7 @@ public:
      * Delete the min from the tree and rebalance
      */
     void DeleteMin() {
+        int *max = array[0];
         
     }
     
@@ -244,12 +244,17 @@ int main(int argc, const char * argv[]) {
     
 //    MatrixGenerator(matrix, n, d);
     
-    DHeap min_heap(3, 2);
-//    min_heap.insert(4, 3);
-//    min_heap.printHeap();
-//    min_heap.insert(1, 2);
-//    min_heap.printHeap();
-//    min_heap.insert(3, 6);
+    DHeap min_heap(11, 2);
+    min_heap.insert(4, 3);
+    min_heap.printHeap();
+    min_heap.insert(1, 2);
+    min_heap.printHeap();
+    min_heap.insert(3, 6);
+    min_heap.printHeap();
+    min_heap.insert(8, 2);
+    min_heap.insert(9, 2);
+    min_heap.insert(10, 2);
+    min_heap.insert(11, 1);
     min_heap.printHeap();
     
 //    MatrixPrint(matrix);
