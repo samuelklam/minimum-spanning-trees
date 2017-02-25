@@ -12,8 +12,6 @@
 #include <iomanip>
 #include <array>
 
-using namespace std;
-
 /*
  * Generates and returns an adjacency matrix
  * @param n : # of vertices in the matrix
@@ -180,7 +178,7 @@ public:
     
     /*
      * Function to insert element
-     * Note that we store heap elements in the form of [vertex #, distance (or weight)]
+     * Note that we store heap elements in the form of [vertex #, distance/weight edge]
      */
     void insert(int vertex, int distance) {
         if (IsFull()) {
@@ -196,17 +194,6 @@ public:
     }
     
     /*
-     * Gets the smallest element in the heap
-     */
-    int* FindMin() {
-        if (IsEmpty()) {
-            std::cout<<"Warning! There are no elements in the heap currently." << std::endl;
-            return 0;
-        }
-        return array[0];
-    }
-    
-    /*
      * Function BubbleUp
      */
     void BubbleUp(int insert_pos) {
@@ -218,11 +205,51 @@ public:
     }
 
     /*
-     * Delete the min from the tree and rebalance
+     * Delete the min from the heap and rebalances
+     * @param min : stores the deleted [vertex, distance]
      */
-    void DeleteMin() {
-        int *max = array[0];
+    int* DeleteMin() {
+        if (IsEmpty()) {
+            std::cout << "Warning! There are no elements in the heap currently." << std::endl;
+            return 0;
+        }
+
+        int min[2];
+        min[0] = array[0][0];
+        min[1] = array[0][1];
         
+        array[0] = array[current_size-1];
+        current_size--;
+        
+        MinHeapify(0);
+        
+        return min;
+    }
+    
+    /*
+     * Rearranges the tree rooted at N to be a MIN-HEAP
+     */
+    void MinHeapify(int parent_pos) {
+        
+        int swap_pos = parent_pos;
+        bool swap_bool = 1;
+        
+        while (swap_bool) {
+            // iterate over the children to find the smallest value to swap with
+            for (int i = 1; i < d + 1; i++) {
+                int child_pos = GetKthChild(parent_pos, i);
+                if ((child_pos < current_size) && (array[child_pos][1] < array[parent_pos][1])) {
+                    swap_pos = child_pos;
+                }
+            }
+            if (swap_pos != parent_pos) {
+                std::swap(array[parent_pos], array[swap_pos]);
+                parent_pos = swap_pos;
+            }
+            else {
+                swap_bool = 0;
+            }
+        }
     }
     
     /*
@@ -244,18 +271,7 @@ int main(int argc, const char * argv[]) {
     
 //    MatrixGenerator(matrix, n, d);
     
-    DHeap min_heap(11, 2);
-    min_heap.insert(4, 3);
-    min_heap.printHeap();
-    min_heap.insert(1, 2);
-    min_heap.printHeap();
-    min_heap.insert(3, 6);
-    min_heap.printHeap();
-    min_heap.insert(8, 2);
-    min_heap.insert(9, 2);
-    min_heap.insert(10, 2);
-    min_heap.insert(11, 1);
-    min_heap.printHeap();
+//    DHeap min_heap(11, 2);
     
 //    MatrixPrint(matrix);
     
