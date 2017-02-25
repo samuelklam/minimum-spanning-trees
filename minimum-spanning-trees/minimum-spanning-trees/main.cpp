@@ -239,7 +239,7 @@ public:
      * Delete the min from the heap and rebalances
      * @param min : stores the deleted [vertex, distance]
      */
-    int* DeleteMin(int min[2]) {
+    float* DeleteMin(float min[2]) {
         if (IsEmpty()) {
             std::cout << "Warning! There are no elements in the heap currently." << std::endl;
             return 0;
@@ -305,9 +305,9 @@ public:
  */
 template<int MAX_ROW, int MAX_COL>
 float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
-    int dist[n];
-    int prev[n];
-    int v[2];
+    float dist[n];
+    float prev[n];
+    float v[2];
     
     float sum = 0;
     
@@ -336,15 +336,15 @@ float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
         min_heap.DeleteMin(v);
         
         // mark removed vertex as visited
-        vertices[v[0]] = 1;
-        sum += dist[v[0]];
+        vertices[(int)v[0]] = 1;
+        sum += dist[(int)v[0]];
         
         // iterate over edges of that vertex
         for (int w = 0; w < n; w++) {
             // check that this vertex is not itself & we haven't visited it before
             if ((v[0] != w) && (v[w] == 0)) {
-                if (dist[w] > matrix[v[0]][w]) {
-                    dist[w] = matrix[v[0]][w];
+                if (dist[w] > matrix[(int)v[0]][w]) {
+                    dist[w] = matrix[(int)v[0]][w];
                     prev[w] = v[0];
                     min_heap.Insert(w, dist[w]);
                 }
@@ -360,39 +360,38 @@ int main(int argc, const char * argv[]) {
 
     std::cout << "Hello world!" << std::endl;
     
-    int n = 6;
+    int n = 3;
     int d = 2;
-    float matrix[6][6];
+    float matrix[3][3];
     
     MatrixGenerator(matrix, n, d);
-//    MatrixPrint(matrix);
+    MatrixPrint(matrix);
     
+    float sum = Prim(matrix, n);
     
-//    int sum = Prim(matrix, n);
-//    
-//    std::cout << "Sum here: " <<sum << std::endl;
+    std::cout << "Sum here: " << sum << std::endl;
     
     // Testing for DHeap Implemetation
-    DHeap min_heap(n, 2);
-    min_heap.Insert(0, 1);
-    min_heap.Insert(1, 3);
-    min_heap.Insert(2, 2);
-    min_heap.Insert(3, 3);
-    min_heap.Insert(3, 4);
-    min_heap.Insert(4, 3);
-    min_heap.Insert(4, 0);
-    min_heap.printHeap();
-    int v[2];
-    min_heap.DeleteMin(v);
-    min_heap.printHeap();
-    min_heap.DeleteMin(v);
-    min_heap.printHeap();
-    min_heap.Insert(1, 3);
-    min_heap.Insert(2, 2);
-    min_heap.Insert(0, 3);
-    min_heap.printHeap();
-    min_heap.Insert(0, 0);
-    min_heap.printHeap();
-    
+//    DHeap min_heap(n, 2);
+//    min_heap.Insert(0, 1);
+//    min_heap.Insert(1, 3);
+//    min_heap.Insert(2, 2);
+//    min_heap.Insert(3, 3);
+//    min_heap.Insert(3, 4);
+//    min_heap.Insert(4, 3);
+//    min_heap.Insert(4, 0);
+//    min_heap.printHeap();
+//    int v[2];
+//    min_heap.DeleteMin(v);
+//    min_heap.printHeap();
+//    min_heap.DeleteMin(v);
+//    min_heap.printHeap();
+//    min_heap.Insert(1, 3);
+//    min_heap.Insert(2, 2);
+//    min_heap.Insert(0, 3);
+//    min_heap.printHeap();
+//    min_heap.Insert(0, 0);
+//    min_heap.printHeap();
+//    
     return 0;
 }
