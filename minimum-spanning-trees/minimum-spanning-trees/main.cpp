@@ -350,35 +350,35 @@ float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
 
 int main(int argc, const char * argv[]) {
 
-     //std::cout << "Here 1";
-
     if (argc != 5) {
         printf("Invalid arguments.");
+        return 1;
     }
-    //std::cout << "Here 1";
+    
+    // denotes # of vertices in the graph
     int n = atoi(argv[2]);
-    int dim = atoi(argv[4]);
+    
+    // how many times to calculate prim
     int trials = atoi(argv[3]);
+    
+    // dimensons for the problem
+    int dim = atoi(argv[4]);
+    
     float sum = 0.0;
 
-    std::cout << n << " " << dim << " " << trials;
-    //float matrix[2048][2048];
+    std::cout << "Command line args: " << n << " " << dim << " " << trials << std::endl;
 
     for (int i = 0; i < trials; i++)
     {
-        float matrix[512][512];
+        float matrix[2048][2048];
         MatrixGenerator(matrix, n, dim);
         sum += Prim(matrix, n);
         // std::cout << "Sum here: " << Prim(matrix, n) << std::endl;
-
     }
 
     sum /= trials;
 
-    //MatrixGenerator(matrix, n, dim);
-    //MatrixPrint(matrix);
-
-    std::cout << "Sum here: " << sum << std::endl;
+    std::cout << "Calculated sum: " << sum << std::endl;
 
     // Testing for DHeap Implemetation
 //    DHeap min_heap(n, 2);
