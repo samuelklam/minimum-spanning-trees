@@ -15,14 +15,18 @@
 
 int main(int argc, const char * argv[]) {
 
-    std::cout << "Hello world!" << std::endl;
+    if (argc != 5){
+        printf("Invalid arguments.");
+    }
 
-    int n = 6;
-    int d = 2;
+    int n = atoi(argv[2]);
+    int d = atoi(argv[4]);
+    int trials = atoi(argv[3]);
+
     float matrix[6][6];
 
     MatrixGenerator(matrix, n, d);
-//    MatrixPrint(matrix);
+    MatrixPrint(matrix);
 
 
 //    int sum = Prim(matrix, n);
@@ -38,18 +42,18 @@ int main(int argc, const char * argv[]) {
     min_heap.Insert(3, 4);
     min_heap.Insert(4, 3);
     min_heap.Insert(4, 0);
-    min_heap.printHeap();
+  //  min_heap.printHeap();
     int v[2];
     min_heap.DeleteMin(v);
-    min_heap.printHeap();
+   // min_heap.printHeap();
     min_heap.DeleteMin(v);
-    min_heap.printHeap();
+  //  min_heap.printHeap();
     min_heap.Insert(1, 3);
     min_heap.Insert(2, 2);
     min_heap.Insert(0, 3);
-    min_heap.printHeap();
+   // min_heap.printHeap();
     min_heap.Insert(0, 0);
-    min_heap.printHeap();
+   // min_heap.printHeap();
 
     return 0;
 }
