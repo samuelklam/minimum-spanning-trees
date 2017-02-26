@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		812ACE491E61D29F00D20DFB /* d-heap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 812ACE471E61D29F00D20DFB /* d-heap.cpp */; };
 		812CCFAC1E6086A0002514ED /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 812CCFAB1E6086A0002514ED /* main.cpp */; };
+		81592F621E636F9400A2E80C /* adjacency-matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81592F601E636F9400A2E80C /* adjacency-matrix.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,8 @@
 		812ACE481E61D29F00D20DFB /* d-heap.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "d-heap.hpp"; sourceTree = "<group>"; };
 		812CCFA81E6086A0002514ED /* minimum-spanning-trees */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "minimum-spanning-trees"; sourceTree = BUILT_PRODUCTS_DIR; };
 		812CCFAB1E6086A0002514ED /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		81592F601E636F9400A2E80C /* adjacency-matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "adjacency-matrix.cpp"; sourceTree = "<group>"; };
+		81592F611E636F9400A2E80C /* adjacency-matrix.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "adjacency-matrix.hpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +66,8 @@
 				812CCFAB1E6086A0002514ED /* main.cpp */,
 				812ACE471E61D29F00D20DFB /* d-heap.cpp */,
 				812ACE481E61D29F00D20DFB /* d-heap.hpp */,
+				81592F601E636F9400A2E80C /* adjacency-matrix.cpp */,
+				81592F611E636F9400A2E80C /* adjacency-matrix.hpp */,
 			);
 			path = "minimum-spanning-trees";
 			sourceTree = "<group>";
@@ -124,6 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81592F621E636F9400A2E80C /* adjacency-matrix.cpp in Sources */,
 				812ACE491E61D29F00D20DFB /* d-heap.cpp in Sources */,
 				812CCFAC1E6086A0002514ED /* main.cpp in Sources */,
 			);
