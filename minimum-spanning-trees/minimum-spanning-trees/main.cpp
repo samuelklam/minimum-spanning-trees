@@ -122,7 +122,7 @@ private:
     int d;
     int size;
     int current_size;
-    int **array;
+    float **array;
     // we use this array to track the position of the vertex in the heap
     // positive int denotes its position in the array, -1 if not in the heap
     int *heap_vertex_pos;
@@ -137,10 +137,10 @@ public:
         size = capacity + 1;
         current_size = 0;
         d = num_children;
-        array = new int* [capacity];
+        array = new float* [capacity];
         heap_vertex_pos = new int[capacity];
         for (int i = 0 ; i < capacity; i++) {
-            array[i] = new int[2];
+            array[i] = new float[2];
             heap_vertex_pos[i] = -1;
         }
     }
@@ -183,16 +183,16 @@ public:
     /*
      * Swaps index position in the heap
      */
-    void SwapIndexPositionInHeap(int *v1, int *v2, int idx1, int idx2) {
-        heap_vertex_pos[v1[0]] = idx2;
-        heap_vertex_pos[v2[0]] = idx1;
+    void SwapIndexPositionInHeap(float *v1, float *v2, int idx1, int idx2) {
+        heap_vertex_pos[(int)v1[0]] = idx2;
+        heap_vertex_pos[(int)v2[0]] = idx1;
     }
 
     /*
      * Insert element into the heap and Bubble Up to maintain heap properties
      * Note that we store heap elements in the form of [vertex #, distance/weight edge]
      */
-    void Insert(int vertex, int distance) {
+    void Insert(int vertex, float distance) {
         if (IsFull()) {
             std::cout << "Warning! We've reached the max heap size." << std::endl;
             return;
@@ -231,7 +231,7 @@ public:
      * Delete the min from the heap and rebalances
      * @param min : stores the deleted [vertex, distance]
      */
-    int* DeleteMin(int min[2]) {
+    float* DeleteMin(float min[2]) {
         if (IsEmpty()) {
             std::cout << "Warning! There are no elements in the heap currently." << std::endl;
             return 0;
@@ -240,9 +240,9 @@ public:
         min[0] = array[0][0];
         min[1] = array[0][1];
 
-        heap_vertex_pos[array[0][0]] = -1;
+        heap_vertex_pos[(int)(array[0][0])] = -1;
         if (!IsEmpty()) {
-            heap_vertex_pos[array[current_size-1][0]] = 0;
+            heap_vertex_pos[(int)array[current_size-1][0]] = 0;
         }
         array[0] = array[current_size-1];
         current_size--;
@@ -302,6 +302,7 @@ float Prim(float *x_coords, float *y_coords, int n) {
 
     float sum = 0;
 
+    // we compute the optimal children value for the d-ary heap as well
     DHeap min_heap(n, (pow(n, n-2) / n));
 
     // serves as our set to contain [1, 0] <-> [0th vertex is in MST, 1th vertex not in MST]
@@ -338,8 +339,7 @@ float Prim(float *x_coords, float *y_coords, int n) {
                 
                 int vertex1 = (int)v[0];
                 int vertex2 = w;
-                float edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex1], 2) + (pow(y_coords[vertex2] - y_coords[vertex2], 2)));
-                std::cout << edge_weight << " " << vertex1 << " " << vertex2 <<std::endl;
+                float edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)));
                 
                 if (dist[w] > edge_weight) {
                     dist[w] = edge_weight;
@@ -371,7 +371,7 @@ int main(int argc, const char * argv[]) {
     
     float sum = 0.0;
 
-    std::cout << "Command line args: " << n << " " << dim << " " << trials << std::endl;
+    std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
 
     for (int i = 0; i < trials; i++) {
         
@@ -388,7 +388,7 @@ int main(int argc, const char * argv[]) {
                 y_coords[a] = (float)rand() / RAND_MAX;
             }
             
-//            sum += Prim(x_coords, y_coords, n);
+            sum += Prim(x_coords, y_coords, n);
             
         }
         
@@ -424,29 +424,29 @@ int main(int argc, const char * argv[]) {
 
     sum /= trials;
 
-//    std::cout << "Calculated sum: " << sum << std::endl;
+    std::cout << "Calculated sum: " << sum << std::endl;
 
 //     Testing for DHeap Implemetation
-    DHeap min_heap(n, 2);
-    min_heap.Insert(0, 0.23234);
-    min_heap.Insert(1, 3);
-    min_heap.Insert(2, 2);
-    min_heap.Insert(3, 3);
-    min_heap.Insert(3, 4);
-    min_heap.Insert(4, 3);
-    min_heap.Insert(4, 0);
-    min_heap.printHeap();
-    int v[2];
-    min_heap.DeleteMin(v);
-    min_heap.printHeap();
-    min_heap.DeleteMin(v);
-    min_heap.printHeap();
-    min_heap.Insert(1, 3);
-    min_heap.Insert(2, 2);
-    min_heap.Insert(0, 3);
-    min_heap.printHeap();
-    min_heap.Insert(0, 0);
-    min_heap.printHeap();
+//    DHeap min_heap(n, 2);
+//    min_heap.Insert(0, 0.23234);
+//    min_heap.Insert(1, 3);
+//    min_heap.Insert(2, 2);
+//    min_heap.Insert(3, 3);
+//    min_heap.Insert(3, 4);
+//    min_heap.Insert(4, 3);
+//    min_heap.Insert(4, 0);
+//    min_heap.printHeap();
+//    float v[2];
+//    min_heap.DeleteMin(v);
+//    min_heap.printHeap();
+//    min_heap.DeleteMin(v);
+//    min_heap.printHeap();
+//    min_heap.Insert(1, 3);
+//    min_heap.Insert(2, 2);
+//    min_heap.Insert(0, 3);
+//    min_heap.printHeap();
+//    min_heap.Insert(0, 0);
+//    min_heap.printHeap();
 
     return 0;
 }
