@@ -115,15 +115,6 @@ void MatrixPrint(float (&matrix)[MAX_ROW][MAX_COL]) {
     }
 }
 
-/*
- * Min Binary heap
- */
-
-
-/*
- * Prim's algorithm
- */
-
 
 class DHeap {
 private:
@@ -329,23 +320,24 @@ float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
     vertices[0] = 1;
     dist[0] = 0;
     
-    min_heap.Insert(0, dist[0]);
+    min_heap.Insert(0, (int)dist[0]);
     
     while (!min_heap.IsEmpty()) {
         
+        v[0] = (int)v[0];
         min_heap.DeleteMin(v);
         
         // mark removed vertex as visited
         vertices[(int)v[0]] = 1;
-        sum += dist[(int)v[0]];
+        sum += (float)dist[(int)v[0]];
         
         // iterate over edges of that vertex
         for (int w = 0; w < n; w++) {
             // check that this vertex is not itself & we haven't visited it before
-            if ((v[0] != w) && (v[w] == 0)) {
+            if (((int)v[0] != w) && (vertices[w] == 0)) {
                 if (dist[w] > matrix[(int)v[0]][w]) {
                     dist[w] = matrix[(int)v[0]][w];
-                    prev[w] = v[0];
+                    prev[w] = (int)v[0];
                     min_heap.Insert(w, dist[w]);
                 }
             }
@@ -357,13 +349,15 @@ float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
 
 int main(int argc, const char * argv[]) {
 
-    std::cout << "Hello world!" << std::endl;
+//    if (argc != 5) {
+//        printf("Invalid arguments.");
+//    }
     
-    int n = 3;
-    int d = 2;
-    float matrix[3][3];
+    int n = 4;
+    int dim = 2;
+    float matrix[4][4];
     
-    MatrixGenerator(matrix, n, d);
+    MatrixGenerator(matrix, n, dim);
     MatrixPrint(matrix);
     
     float sum = Prim(matrix, n);
@@ -391,7 +385,6 @@ int main(int argc, const char * argv[]) {
 //    min_heap.printHeap();
 //    min_heap.Insert(0, 0);
 //    min_heap.printHeap();
-//    
 
     return 0;
 }
