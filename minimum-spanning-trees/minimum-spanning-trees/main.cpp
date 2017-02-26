@@ -231,7 +231,7 @@ public:
      * Delete the min from the heap and rebalances
      * @param min : stores the deleted [vertex, distance]
      */
-    float* DeleteMin(float min[2]) {
+    int* DeleteMin(int min[2]) {
         if (IsEmpty()) {
             std::cout << "Warning! There are no elements in the heap currently." << std::endl;
             return 0;
@@ -295,8 +295,7 @@ public:
  * @param n : # of vertices in the graph
  * @return sum : the sum of the weight of the MST
  */
-template<int MAX_ROW, int MAX_COL>
-float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
+float Prim(float *x_coords, float *y_coords, int n) {
     float dist[n];
     float prev[n];
     float v[2];
@@ -336,8 +335,14 @@ float Prim(float (&matrix)[MAX_ROW][MAX_COL], int n) {
         for (int w = 0; w < n; w++) {
             // check that this vertex is not itself & we haven't visited it before
             if (((int)v[0] != w) && (vertices[w] == 0)) {
-                if (dist[w] > matrix[(int)v[0]][w]) {
-                    dist[w] = matrix[(int)v[0]][w];
+                
+                int vertex1 = (int)v[0];
+                int vertex2 = w;
+                float edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex1], 2) + (pow(y_coords[vertex2] - y_coords[vertex2], 2)));
+                std::cout << edge_weight << " " << vertex1 << " " << vertex2 <<std::endl;
+                
+                if (dist[w] > edge_weight) {
+                    dist[w] = edge_weight;
                     prev[w] = (int)v[0];
                     min_heap.Insert(w, dist[w]);
                 }
@@ -368,39 +373,80 @@ int main(int argc, const char * argv[]) {
 
     std::cout << "Command line args: " << n << " " << dim << " " << trials << std::endl;
 
-    for (int i = 0; i < trials; i++)
-    {
-        float matrix[2048][2048];
-        MatrixGenerator(matrix, n, dim);
-        sum += Prim(matrix, n);
-        // std::cout << "Sum here: " << Prim(matrix, n) << std::endl;
+    for (int i = 0; i < trials; i++) {
+        
+//        if (dim == 0) {
+//        }
+        
+        if (dim == 2) {
+            float x_coords[n];
+            float y_coords[n];
+            
+            // initialize coordinates
+            for (int a = 0; a < n; a++) {
+                x_coords[a] = (float)rand() / RAND_MAX;
+                y_coords[a] = (float)rand() / RAND_MAX;
+            }
+            
+//            sum += Prim(x_coords, y_coords, n);
+            
+        }
+        
+        else if (dim == 3) {
+            float x_coords[n];
+            float y_coords[n];
+            float z_coords[n];
+            
+            // initialize coordinates
+            for (int a = 0; a < n; a++) {
+                x_coords[a] = (float)rand() / RAND_MAX;
+                y_coords[a] = (float)rand() / RAND_MAX;
+                z_coords[a] = (float)rand() / RAND_MAX;
+            }
+        }
+        
+        else if (dim == 4) {
+            float x_coords[n];
+            float y_coords[n];
+            float z_coords[n];
+            float v_coords[n];
+            
+            // initialize coordinates
+            for (int a = 0; a < n; a++) {
+                x_coords[a] = (float)rand() / RAND_MAX;
+                y_coords[a] = (float)rand() / RAND_MAX;
+                z_coords[a] = (float)rand() / RAND_MAX;
+                v_coords[a] = (float)rand() / RAND_MAX;
+            }
+        }
+
     }
 
     sum /= trials;
 
-    std::cout << "Calculated sum: " << sum << std::endl;
+//    std::cout << "Calculated sum: " << sum << std::endl;
 
-    // Testing for DHeap Implemetation
-//    DHeap min_heap(n, 2);
-//    min_heap.Insert(0, 1);
-//    min_heap.Insert(1, 3);
-//    min_heap.Insert(2, 2);
-//    min_heap.Insert(3, 3);
-//    min_heap.Insert(3, 4);
-//    min_heap.Insert(4, 3);
-//    min_heap.Insert(4, 0);
-//    min_heap.printHeap();
-//    int v[2];
-//    min_heap.DeleteMin(v);
-//    min_heap.printHeap();
-//    min_heap.DeleteMin(v);
-//    min_heap.printHeap();
-//    min_heap.Insert(1, 3);
-//    min_heap.Insert(2, 2);
-//    min_heap.Insert(0, 3);
-//    min_heap.printHeap();
-//    min_heap.Insert(0, 0);
-//    min_heap.printHeap();
+//     Testing for DHeap Implemetation
+    DHeap min_heap(n, 2);
+    min_heap.Insert(0, 0.23234);
+    min_heap.Insert(1, 3);
+    min_heap.Insert(2, 2);
+    min_heap.Insert(3, 3);
+    min_heap.Insert(3, 4);
+    min_heap.Insert(4, 3);
+    min_heap.Insert(4, 0);
+    min_heap.printHeap();
+    int v[2];
+    min_heap.DeleteMin(v);
+    min_heap.printHeap();
+    min_heap.DeleteMin(v);
+    min_heap.printHeap();
+    min_heap.Insert(1, 3);
+    min_heap.Insert(2, 2);
+    min_heap.Insert(0, 3);
+    min_heap.printHeap();
+    min_heap.Insert(0, 0);
+    min_heap.printHeap();
 
     return 0;
 }

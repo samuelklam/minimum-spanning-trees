@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "minimum-spanning-trees/main.cpp"
-            timestampString = "509766172.923216"
+            timestampString = "509829913.731478"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "302"
-            endingLineNumber = "302"
-            landmarkName = "Prim(float (&amp;matrix)[MAX_ROW][MAX_COL], int n)"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
+            landmarkName = "Prim(float *x_coords, float *y_coords, int n)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
