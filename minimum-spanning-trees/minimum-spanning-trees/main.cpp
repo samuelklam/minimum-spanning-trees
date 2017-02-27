@@ -11,6 +11,8 @@
 #include <math.h>
 #include <array>
 #include <cstdlib>
+#include <vector>
+#include <list>
 
 class DHeap {
 private:
@@ -231,28 +233,28 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
         for (int w = 0; w < n; w++) {
             // check that this vertex is not itself & we haven't visited it before
             if (((int)v[0] != w) && (vertices[w] == 0)) {
-                
+
                 int vertex1 = (int)v[0];
                 int vertex2 = w;
-                
+
                 float edge_weight;
-                
+
                 if (dim == 0) {
                     edge_weight = (float)rand() / RAND_MAX;
                 }
-                
+
                 else if (dim == 2) {
                     edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)));
                 }
-                
+
                 else if (dim == 3) {
                     edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)) + (pow(z_coords[vertex1] - z_coords[vertex2], 2.0)));
                 }
-                
+
                 else if (dim == 4) {
                     edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)) + (pow(z_coords[vertex1] - z_coords[vertex2], 2.0)) + (pow(v_coords[vertex1] - v_coords[vertex2], 2.0)));
                 }
-                
+
                 if (dist[w] > edge_weight) {
                     dist[w] = edge_weight;
                     prev[w] = (int)v[0];
@@ -265,76 +267,201 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
     return sum;
 }
 
+struct node{
+    int index;
+    float weight;
+};
+
+std::vector<std::list<node>> adj_list(int dim, int n){
+    std::vector<std::list<node>> adjlist;
+
+    std::list<node> clean;
+    clean.clear();
+    srand((unsigned)time(NULL));
+    // adj list
+
+    for (int i = 0; i < n; i++)
+    {
+        adjlist.push_back(clean);
+    }
+
+    if(dim == 0)
+    {
+        for (int i = 0; i < n; i ++)
+        {
+            adjlist.push_back(clean);
+            for (int j = i + 1; j < n; j++)
+            {
+                node ins;
+                ins.index = j;
+                ins.weight = (float)rand() / RAND_MAX;
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+
+    else if(dim == 2)
+    {
+        float x_coords[n];
+        float y_coords[n];
+
+        // initialize x_coords and y_coords
+        // note that x[0], y[0] denotes the coords for the 0th vertex
+        for (int a = 0; a < n; a++) {
+            x_coords[a] = (float)rand() / RAND_MAX;
+            y_coords[a] = (float)rand() / RAND_MAX;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                node ins;
+                ins.index = j;
+                // standard Euclidean distance calculation
+                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + (pow(y_coords[i] - y_coords[j], 2)));
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+
+    else if (dim == 3)
+    {
+        float x_coords[n];
+        float y_coords[n];
+        float z_coords[n];
+
+        // initialize coordinates
+        for (int a = 0; a < n; a++) {
+            x_coords[a] = (float)rand() / RAND_MAX;
+            y_coords[a] = (float)rand() / RAND_MAX;
+            z_coords[a] = (float)rand() / RAND_MAX;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                node ins;
+                ins.index = j;
+                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + (pow(y_coords[i] - y_coords[j], 2)) + (pow(z_coords[i] - z_coords[j], 2)));
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+
+    if (dim == 4) {
+
+        float x_coords[n];
+        float y_coords[n];
+        float z_coords[n];
+        float v_coords[n];
+
+        // initialize coordinates
+        for (int a = 0; a < n; a++) {
+            x_coords[a] = (float)rand() / RAND_MAX;
+            y_coords[a] = (float)rand() / RAND_MAX;
+            z_coords[a] = (float)rand() / RAND_MAX;
+            v_coords[a] = (float)rand() / RAND_MAX;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                node ins;
+                ins.index = j;
+                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + pow(y_coords[i] - y_coords[j], 2) + pow(z_coords[i] - z_coords[j], 2) + pow(v_coords[i] - v_coords[j], 2));
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+    return adjlist;
+
+}
+
 int main(int argc, const char * argv[]) {
 
     if (argc != 5) {
         printf("Invalid arguments.");
         return 1;
     }
-    
+
     // denotes # of vertices in the graph
     int n = atoi(argv[2]);
-    
+
     // how many times to calculate prim
     int trials = atoi(argv[3]);
-    
+
     // dimensons for the problem
     int dim = atoi(argv[4]);
-    
+
     float sum = 0.0;
 
     std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
 
+    //create and print out adj list
+    std::vector<std::list<node>> adjlist = adj_list(dim, n);
+
+    for (int i = 0; i < n; i++)
+    {
+        for (auto ci = adjlist[i].begin(); ci != adjlist[i].end(); ++ci)
+        {
+            node k = *ci;
+            std::cout<<k.weight<<" ";
+        }
+        std::cout<<std::endl;
+    }
+
+
     for (int i = 0; i < trials; i++) {
         srand((unsigned)time(NULL));
-        
+
         if (dim == 0) {
             float x_coords[1];
             float y_coords[1];
             float z_coords[1];
             float v_coords[1];
-            
+
             sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
-        
+
         if (dim == 2) {
             float x_coords[n];
             float y_coords[n];
             float z_coords[1];
             float v_coords[1];
-            
+
             // initialize coordinates
             for (int a = 0; a < n; a++) {
                 x_coords[a] = (float)rand() / RAND_MAX;
                 y_coords[a] = (float)rand() / RAND_MAX;
             }
-            
+
             sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
-            
+
         }
-        
+
         else if (dim == 3) {
             float x_coords[n];
             float y_coords[n];
             float z_coords[n];
             float v_coords[1];
-            
+
             // initialize coordinates
             for (int a = 0; a < n; a++) {
                 x_coords[a] = (float)rand() / RAND_MAX;
                 y_coords[a] = (float)rand() / RAND_MAX;
                 z_coords[a] = (float)rand() / RAND_MAX;
             }
-            
+
             sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
-        
+
         else if (dim == 4) {
             float x_coords[n];
             float y_coords[n];
             float z_coords[n];
             float v_coords[n];
-            
+
             // initialize coordinates
             for (int a = 0; a < n; a++) {
                 x_coords[a] = (float)rand() / RAND_MAX;
@@ -342,7 +469,7 @@ int main(int argc, const char * argv[]) {
                 z_coords[a] = (float)rand() / RAND_MAX;
                 v_coords[a] = (float)rand() / RAND_MAX;
             }
-            
+
             sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
 
