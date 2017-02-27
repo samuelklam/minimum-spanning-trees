@@ -484,32 +484,15 @@ int main(int argc, const char * argv[]) {
     int dim = atoi(argv[4]);
 
     std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
-    
-    // code to run all the cases at once
-    // prepare variables
-    
-    int trials_test[14] = {5000, 5000, 5000, 1000, 200, 200, 100, 25, 10, 5, 5, 5, 5, 5};
-    int n_test[14] = {16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072};
 
     std::ofstream myfile;
     myfile.open("output.txt");
-    for (int a = 3; a < 5; a++) {
-        std::cout << "Dimension: " << a << std::endl;
-        if (a != 1) {
-            for (int b = 0; b < 14; b++) {
-                if (a == 3 & b < 13) {
-                    continue;
-                }
-                start = clock();
-                float sum;
-                sum = run_prims(n_test[b], trials_test[b], a);
-                end = clock();
-                double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-                std::cout << "n value: " << n_test[b] << ", sum: " << sum / trials_test[b] << ", time spent: " <<  time_spent << ", num trials: " << trials_test[b] << std::endl;
-                myfile << "dimension: " << a << ", n value: " << n_test[b] << ", sum: " << sum / trials_test[b] << ", time spent: " <<  time_spent << ", num trials: " << trials_test[b] << std::endl;
-            }
-        }
-    }
+    start = clock();
+    float sum = run_prims(n, trials, dim);
+    end = clock();
+    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    std::cout << "sum: " << sum / trials << ", time spent: " <<  time_spent << std::endl;
+    myfile << "dimension: " << dim << ", n value: " << n << ", sum: " << sum / trials << ", time spent: " <<  time_spent << ", num trials: " << trials << std::endl;
     myfile.close();
 
     return 0;
