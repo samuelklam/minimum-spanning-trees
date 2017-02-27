@@ -398,7 +398,7 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
         }
     }
 
-    std::cout << "Largest Edge for n = "<< n << " and dim = "<< dim<< " : " <<largest_edge << std::endl;
+    //std::cout << "Largest Edge for n = "<< n << " and dim = "<< dim<< " : " <<largest_edge << std::endl;
     return sum;
 }
 
@@ -483,17 +483,8 @@ int main(int argc, const char * argv[]) {
     // dimensons for the problem
     int dim = atoi(argv[4]);
 
-    std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
-
-    std::ofstream myfile;
-    myfile.open("output.txt");
-    start = clock();
     float sum = run_prims(n, trials, dim);
-    end = clock();
-    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    std::cout << "sum: " << sum / trials << ", time spent: " <<  time_spent << std::endl;
-    myfile << "dimension: " << dim << ", n value: " << n << ", sum: " << sum / trials << ", time spent: " <<  time_spent << ", num trials: " << trials << std::endl;
-    myfile.close();
+    std::cout << sum / trials << " " << n << " "<< trials << " " << dim << std::endl;
 
     return 0;
 }
