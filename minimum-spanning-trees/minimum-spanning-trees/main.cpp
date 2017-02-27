@@ -13,6 +13,8 @@
 #include <cstdlib>
 #include <vector>
 #include <list>
+#include <time.h>
+#include <windows.h>
 
 struct Node {
     int v;
@@ -427,7 +429,9 @@ int main(int argc, const char * argv[]) {
 //    }
 
     srand((unsigned)time(NULL));
+    double seconds = 0.0;
     for (int i = 0; i < trials; i++) {
+        long int before = GetTickCount();
 
         if (dim == 0) {
             float x_coords[1];
@@ -486,11 +490,13 @@ int main(int argc, const char * argv[]) {
 
             sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
-
+        long int after = GetTickCount();
+        seconds += (double) after - before;
     }
 
+    seconds /= 1000.0;
     sum /= trials;
-
+    std::cout << "Time per trial: " << seconds/trials << "s" <<  std::endl;
     std::cout << "Calculated sum: " << sum << std::endl;
 
     return 0;
