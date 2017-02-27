@@ -63,7 +63,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "0 512 50 2"
+            argument = "0 16000 2 2"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

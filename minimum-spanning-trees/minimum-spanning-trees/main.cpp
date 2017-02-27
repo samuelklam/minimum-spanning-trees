@@ -37,13 +37,12 @@ public:
      * @param num_children : "d" should be optimally calculated beforehand
      */
     DHeap(int capacity, int num_children) {
-        size = capacity + 1;
+        size = capacity;
         current_size = 0;
         d = num_children;
         array = new Node[capacity];
         heap_vertex_pos = new int[capacity];
         for (int i = 0 ; i < capacity; i++) {
-//            array[i] = {-1, -1};
             heap_vertex_pos[i] = -1;
         }
     }
@@ -78,6 +77,7 @@ public:
 
     /*
      * Checks to see what position the vertex is in the heap
+     * Returns heap position if in the heap else -1
      */
     int Find(int v) {
         return (heap_vertex_pos[v] != -1) ? heap_vertex_pos[v] : -1;
@@ -104,6 +104,7 @@ public:
         // if we already have the vertex in the heap than we just update the distance
         if (Find(vertex) != -1) {
             array[heap_vertex_pos[vertex]].dist = distance;
+            
             MinHeapify(heap_vertex_pos[vertex]);
             BubbleUp(heap_vertex_pos[vertex]);
         }
@@ -192,23 +193,135 @@ public:
     }
 };
 
+/*
+ * Using adjacency list
+ */
+struct node{
+    int index;
+    float weight;
+};
+
+std::vector<std::list<node>> adj_list(int dim, int n){
+    std::vector<std::list<node>> adjlist;
+    
+    std::list<node> clean;
+    clean.clear();
+    srand((unsigned)time(NULL));
+    // adj list
+    
+    for (int i = 0; i < n; i++)
+    {
+        adjlist.push_back(clean);
+    }
+    
+    if(dim == 0)
+    {
+        for (int i = 0; i < n; i ++)
+        {
+            adjlist.push_back(clean);
+            for (int j = i + 1; j < n; j++)
+            {
+                node ins;
+                ins.index = j;
+                ins.weight = (float)rand() / RAND_MAX;
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+    
+    else if(dim == 2)
+    {
+        float x_coords[n];
+        float y_coords[n];
+        
+        // initialize x_coords and y_coords
+        // note that x[0], y[0] denotes the coords for the 0th vertex
+        for (int a = 0; a < n; a++) {
+            x_coords[a] = (float)rand() / RAND_MAX;
+            y_coords[a] = (float)rand() / RAND_MAX;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                node ins;
+                ins.index = j;
+                // standard Euclidean distance calculation
+                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + (pow(y_coords[i] - y_coords[j], 2)));
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+    
+    else if (dim == 3)
+    {
+        float x_coords[n];
+        float y_coords[n];
+        float z_coords[n];
+        
+        // initialize coordinates
+        for (int a = 0; a < n; a++) {
+            x_coords[a] = (float)rand() / RAND_MAX;
+            y_coords[a] = (float)rand() / RAND_MAX;
+            z_coords[a] = (float)rand() / RAND_MAX;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                node ins;
+                ins.index = j;
+                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + (pow(y_coords[i] - y_coords[j], 2)) + (pow(z_coords[i] - z_coords[j], 2)));
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+    
+    if (dim == 4) {
+        
+        float x_coords[n];
+        float y_coords[n];
+        float z_coords[n];
+        float v_coords[n];
+        
+        // initialize coordinates
+        for (int a = 0; a < n; a++) {
+            x_coords[a] = (float)rand() / RAND_MAX;
+            y_coords[a] = (float)rand() / RAND_MAX;
+            z_coords[a] = (float)rand() / RAND_MAX;
+            v_coords[a] = (float)rand() / RAND_MAX;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                node ins;
+                ins.index = j;
+                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + pow(y_coords[i] - y_coords[j], 2) + pow(z_coords[i] - z_coords[j], 2) + pow(v_coords[i] - v_coords[j], 2));
+                adjlist[i].push_back(ins);
+                adjlist[j].push_back(ins);
+            }
+        }
+    }
+    return adjlist;
+    
+}
 
 /*
  * Prim's algorithm
- * @param matrix : matrix containing the graph representation
  * @param n : # of vertices in the graph
  * @return sum : the sum of the weight of the MST
  */
 float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, int n, int dim) {
     float dist[n];
-    float prev[n];
+    int prev[n];
     
     Node v = {-1, -1};
 
     float sum = 0;
 
     // we compute the optimal children value for the d-ary heap as well
-    DHeap min_heap(n, (pow(n, n-2) / n));
+    DHeap min_heap(n, 3);
 
     // serves as our set to contain [1, 0] <-> [0th vertex is in MST, 1th vertex not in MST]
     int vertices[n];
@@ -238,8 +351,7 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
 
         // iterate over edges of that vertex
         for (int w = 0; w < n; w++) {
-            // check that this vertex is not itself & we haven't visited it before
-            if ((v.v != w) && (vertices[w] == 0)) {
+            if (vertices[w] == 0) {
 
                 int vertex1 = v.v;
                 int vertex2 = w;
@@ -274,117 +386,6 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
     return sum;
 }
 
-struct node{
-    int index;
-    float weight;
-};
-
-std::vector<std::list<node>> adj_list(int dim, int n){
-    std::vector<std::list<node>> adjlist;
-
-    std::list<node> clean;
-    clean.clear();
-    srand((unsigned)time(NULL));
-    // adj list
-
-    for (int i = 0; i < n; i++)
-    {
-        adjlist.push_back(clean);
-    }
-
-    if(dim == 0)
-    {
-        for (int i = 0; i < n; i ++)
-        {
-            adjlist.push_back(clean);
-            for (int j = i + 1; j < n; j++)
-            {
-                node ins;
-                ins.index = j;
-                ins.weight = (float)rand() / RAND_MAX;
-                adjlist[i].push_back(ins);
-                adjlist[j].push_back(ins);
-            }
-        }
-    }
-
-    else if(dim == 2)
-    {
-        float x_coords[n];
-        float y_coords[n];
-
-        // initialize x_coords and y_coords
-        // note that x[0], y[0] denotes the coords for the 0th vertex
-        for (int a = 0; a < n; a++) {
-            x_coords[a] = (float)rand() / RAND_MAX;
-            y_coords[a] = (float)rand() / RAND_MAX;
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                node ins;
-                ins.index = j;
-                // standard Euclidean distance calculation
-                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + (pow(y_coords[i] - y_coords[j], 2)));
-                adjlist[i].push_back(ins);
-                adjlist[j].push_back(ins);
-            }
-        }
-    }
-
-    else if (dim == 3)
-    {
-        float x_coords[n];
-        float y_coords[n];
-        float z_coords[n];
-
-        // initialize coordinates
-        for (int a = 0; a < n; a++) {
-            x_coords[a] = (float)rand() / RAND_MAX;
-            y_coords[a] = (float)rand() / RAND_MAX;
-            z_coords[a] = (float)rand() / RAND_MAX;
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                node ins;
-                ins.index = j;
-                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + (pow(y_coords[i] - y_coords[j], 2)) + (pow(z_coords[i] - z_coords[j], 2)));
-                adjlist[i].push_back(ins);
-                adjlist[j].push_back(ins);
-            }
-        }
-    }
-
-    if (dim == 4) {
-
-        float x_coords[n];
-        float y_coords[n];
-        float z_coords[n];
-        float v_coords[n];
-
-        // initialize coordinates
-        for (int a = 0; a < n; a++) {
-            x_coords[a] = (float)rand() / RAND_MAX;
-            y_coords[a] = (float)rand() / RAND_MAX;
-            z_coords[a] = (float)rand() / RAND_MAX;
-            v_coords[a] = (float)rand() / RAND_MAX;
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                node ins;
-                ins.index = j;
-                ins.weight = sqrt(pow(x_coords[i] - x_coords[j], 2) + pow(y_coords[i] - y_coords[j], 2) + pow(z_coords[i] - z_coords[j], 2) + pow(v_coords[i] - v_coords[j], 2));
-                adjlist[i].push_back(ins);
-                adjlist[j].push_back(ins);
-            }
-        }
-    }
-    return adjlist;
-
-}
-
 int main(int argc, const char * argv[]) {
 
     if (argc != 5) {
@@ -401,9 +402,9 @@ int main(int argc, const char * argv[]) {
     // dimensons for the problem
     int dim = atoi(argv[4]);
 
-    float sum = 0.0;
-
     std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
+    
+    float sum = 0.0;
 
     //create and print out adj list
 //    std::vector<std::list<node>> adjlist = adj_list(dim, n);
@@ -418,9 +419,8 @@ int main(int argc, const char * argv[]) {
 //        std::cout<<std::endl;
 //    }
 
-
+    srand((unsigned)time(NULL));
     for (int i = 0; i < trials; i++) {
-        srand((unsigned)time(NULL));
 
         if (dim == 0) {
             float x_coords[1];
@@ -485,28 +485,6 @@ int main(int argc, const char * argv[]) {
     sum /= trials;
 
     std::cout << "Calculated sum: " << sum << std::endl;
-
-//    DHeap min_heap(n, 2);
-//    min_heap.Insert(0, 0.23234);
-//    min_heap.Insert(1, 3);
-//    min_heap.Insert(2, 2);
-//    min_heap.Insert(3, 3);
-//    min_heap.Insert(3, 4);
-//    min_heap.Insert(4, 3);
-//    min_heap.Insert(4, 0);
-//    min_heap.printHeap();
-//    Node v;
-//    v = min_heap.DeleteMin(v);
-//    min_heap.printHeap();
-//    v = min_heap.DeleteMin(v);
-//    min_heap.printHeap();
-//    min_heap.Insert(1, 3);
-//    min_heap.Insert(1, 3.22);
-//    min_heap.Insert(2, 2);
-//    min_heap.Insert(0, 3);
-//    min_heap.printHeap();
-//    min_heap.Insert(0, 0);
-//    min_heap.printHeap();
 
     return 0;
 }
