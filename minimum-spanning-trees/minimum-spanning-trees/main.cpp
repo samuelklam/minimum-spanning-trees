@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include <iomanip>
 #include <array>
 #include <cstdlib>
 
@@ -191,7 +190,7 @@ public:
  * @param n : # of vertices in the graph
  * @return sum : the sum of the weight of the MST
  */
-float Prim(float *x_coords, float *y_coords, int n) {
+float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, int n, int dim) {
     float dist[n];
     float prev[n];
     float v[2];
@@ -235,7 +234,24 @@ float Prim(float *x_coords, float *y_coords, int n) {
                 
                 int vertex1 = (int)v[0];
                 int vertex2 = w;
-                float edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)));
+                
+                float edge_weight;
+                
+                if (dim == 0) {
+                    edge_weight = (float)rand() / RAND_MAX;
+                }
+                
+                else if (dim == 2) {
+                    edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)));
+                }
+                
+                else if (dim == 3) {
+                    edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)) + (pow(z_coords[vertex1] - z_coords[vertex2], 2.0)));
+                }
+                
+                else if (dim == 4) {
+                    edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)) + (pow(z_coords[vertex1] - z_coords[vertex2], 2.0)) + (pow(v_coords[vertex1] - v_coords[vertex2], 2.0)));
+                }
                 
                 if (dist[w] > edge_weight) {
                     dist[w] = edge_weight;
@@ -269,15 +285,23 @@ int main(int argc, const char * argv[]) {
 
     std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
 
-    srand((unsigned)time(NULL));
     for (int i = 0; i < trials; i++) {
+        srand((unsigned)time(NULL));
         
-//        if (dim == 0) {
-//        }
+        if (dim == 0) {
+            float x_coords[1];
+            float y_coords[1];
+            float z_coords[1];
+            float v_coords[1];
+            
+            sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
+        }
         
         if (dim == 2) {
             float x_coords[n];
             float y_coords[n];
+            float z_coords[1];
+            float v_coords[1];
             
             // initialize coordinates
             for (int a = 0; a < n; a++) {
@@ -285,7 +309,7 @@ int main(int argc, const char * argv[]) {
                 y_coords[a] = (float)rand() / RAND_MAX;
             }
             
-            sum += Prim(x_coords, y_coords, n);
+            sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
             
         }
         
@@ -293,6 +317,7 @@ int main(int argc, const char * argv[]) {
             float x_coords[n];
             float y_coords[n];
             float z_coords[n];
+            float v_coords[1];
             
             // initialize coordinates
             for (int a = 0; a < n; a++) {
@@ -300,6 +325,8 @@ int main(int argc, const char * argv[]) {
                 y_coords[a] = (float)rand() / RAND_MAX;
                 z_coords[a] = (float)rand() / RAND_MAX;
             }
+            
+            sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
         
         else if (dim == 4) {
@@ -315,6 +342,8 @@ int main(int argc, const char * argv[]) {
                 z_coords[a] = (float)rand() / RAND_MAX;
                 v_coords[a] = (float)rand() / RAND_MAX;
             }
+            
+            sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
 
     }
@@ -323,7 +352,6 @@ int main(int argc, const char * argv[]) {
 
     std::cout << "Calculated sum: " << sum << std::endl;
 
-//     Testing for DHeap Implemetation
 //    DHeap min_heap(n, 2);
 //    min_heap.Insert(0, 0.23234);
 //    min_heap.Insert(1, 3);
@@ -339,6 +367,7 @@ int main(int argc, const char * argv[]) {
 //    min_heap.DeleteMin(v);
 //    min_heap.printHeap();
 //    min_heap.Insert(1, 3);
+//    min_heap.Insert(1, 3.22);
 //    min_heap.Insert(2, 2);
 //    min_heap.Insert(0, 3);
 //    min_heap.printHeap();

@@ -8,6 +8,10 @@
 
 #include "adjacency-matrix.hpp"
 #include <math.h>
+#include <time.h>
+#include <iostream>
+#include <iomanip>
+#include <stdio.h>
 
 /*
  * Generates and returns an adjacency matrix
