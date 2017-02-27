@@ -25,7 +25,7 @@ private:
     int size;
     int current_size;
     Node *array;
-    
+
     // we use this array to track the position of the vertex in the heap
     // positive int denotes its position in the array, -1 if not in the heap
     int *heap_vertex_pos;
@@ -104,7 +104,7 @@ public:
         // if we already have the vertex in the heap than we just update the distance
         if (Find(vertex) != -1) {
             array[heap_vertex_pos[vertex]].dist = distance;
-            
+
             MinHeapify(heap_vertex_pos[vertex]);
             BubbleUp(heap_vertex_pos[vertex]);
         }
@@ -203,17 +203,17 @@ struct node{
 
 std::vector<std::list<node>> adj_list(int dim, int n){
     std::vector<std::list<node>> adjlist;
-    
+
     std::list<node> clean;
     clean.clear();
     srand((unsigned)time(NULL));
     // adj list
-    
+
     for (int i = 0; i < n; i++)
     {
         adjlist.push_back(clean);
     }
-    
+
     if(dim == 0)
     {
         for (int i = 0; i < n; i ++)
@@ -229,19 +229,19 @@ std::vector<std::list<node>> adj_list(int dim, int n){
             }
         }
     }
-    
+
     else if(dim == 2)
     {
         float x_coords[n];
         float y_coords[n];
-        
+
         // initialize x_coords and y_coords
         // note that x[0], y[0] denotes the coords for the 0th vertex
         for (int a = 0; a < n; a++) {
             x_coords[a] = (float)rand() / RAND_MAX;
             y_coords[a] = (float)rand() / RAND_MAX;
         }
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
                 node ins;
@@ -253,20 +253,20 @@ std::vector<std::list<node>> adj_list(int dim, int n){
             }
         }
     }
-    
+
     else if (dim == 3)
     {
         float x_coords[n];
         float y_coords[n];
         float z_coords[n];
-        
+
         // initialize coordinates
         for (int a = 0; a < n; a++) {
             x_coords[a] = (float)rand() / RAND_MAX;
             y_coords[a] = (float)rand() / RAND_MAX;
             z_coords[a] = (float)rand() / RAND_MAX;
         }
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
                 node ins;
@@ -277,14 +277,14 @@ std::vector<std::list<node>> adj_list(int dim, int n){
             }
         }
     }
-    
+
     if (dim == 4) {
-        
+
         float x_coords[n];
         float y_coords[n];
         float z_coords[n];
         float v_coords[n];
-        
+
         // initialize coordinates
         for (int a = 0; a < n; a++) {
             x_coords[a] = (float)rand() / RAND_MAX;
@@ -292,7 +292,7 @@ std::vector<std::list<node>> adj_list(int dim, int n){
             z_coords[a] = (float)rand() / RAND_MAX;
             v_coords[a] = (float)rand() / RAND_MAX;
         }
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
                 node ins;
@@ -304,7 +304,7 @@ std::vector<std::list<node>> adj_list(int dim, int n){
         }
     }
     return adjlist;
-    
+
 }
 
 /*
@@ -315,7 +315,7 @@ std::vector<std::list<node>> adj_list(int dim, int n){
 float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, int n, int dim) {
     float dist[n];
     int prev[n];
-    
+
     Node v = {-1, -1};
 
     float sum = 0;
@@ -341,9 +341,14 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
 
     min_heap.Insert(0, dist[0]);
 
+    float largest_edge = -10.0;
+
     while (!min_heap.IsEmpty()) {
 
         v = min_heap.DeleteMin(v);
+
+        if(dist[v.v] > largest_edge)
+            largest_edge = dist[v.v];
 
         // mark removed vertex as visited
         vertices[v.v] = 1;
@@ -383,6 +388,8 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
         }
     }
 
+
+    std::cout << "Largest Edge for n = "<< n << " and dim = "<< dim<< " : " <<largest_edge << std::endl;
     return sum;
 }
 
@@ -403,7 +410,7 @@ int main(int argc, const char * argv[]) {
     int dim = atoi(argv[4]);
 
     std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
-    
+
     float sum = 0.0;
 
     //create and print out adj list
