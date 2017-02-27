@@ -14,12 +14,18 @@
 #include <vector>
 #include <list>
 
+struct Node {
+    int v;
+    float dist;
+};
+
 class DHeap {
 private:
     int d;
     int size;
     int current_size;
-    float **array;
+    Node *array;
+    
     // we use this array to track the position of the vertex in the heap
     // positive int denotes its position in the array, -1 if not in the heap
     int *heap_vertex_pos;
@@ -34,10 +40,10 @@ public:
         size = capacity + 1;
         current_size = 0;
         d = num_children;
-        array = new float* [capacity];
+        array = new Node[capacity];
         heap_vertex_pos = new int[capacity];
         for (int i = 0 ; i < capacity; i++) {
-            array[i] = new float[2];
+//            array[i] = {-1, -1};
             heap_vertex_pos[i] = -1;
         }
     }
@@ -80,9 +86,9 @@ public:
     /*
      * Swaps index position in the heap
      */
-    void SwapIndexPositionInHeap(float *v1, float *v2, int idx1, int idx2) {
-        heap_vertex_pos[(int)v1[0]] = idx2;
-        heap_vertex_pos[(int)v2[0]] = idx1;
+    void SwapIndexPositionInHeap(Node v1, Node v2, int idx1, int idx2) {
+        heap_vertex_pos[v1.v] = idx2;
+        heap_vertex_pos[v2.v] = idx1;
     }
 
     /*
@@ -97,14 +103,14 @@ public:
 
         // if we already have the vertex in the heap than we just update the distance
         if (Find(vertex) != -1) {
-            array[heap_vertex_pos[vertex]][1] = distance;
+            array[heap_vertex_pos[vertex]].dist = distance;
             MinHeapify(heap_vertex_pos[vertex]);
             BubbleUp(heap_vertex_pos[vertex]);
         }
         // otherwise do our standard insert
         else {
-            array[current_size][0] = vertex;
-            array[current_size][1] = distance;
+            array[current_size].v = vertex;
+            array[current_size].dist = distance;
             heap_vertex_pos[vertex] = current_size;
 
             BubbleUp(current_size);
@@ -116,7 +122,7 @@ public:
      * Function BubbleUp
      */
     void BubbleUp(int insert_pos) {
-        while (insert_pos > 0 && array[insert_pos][1] < array[GetParent(insert_pos)][1]) {
+        while (insert_pos > 0 && array[insert_pos].dist < array[GetParent(insert_pos)].dist) {
             int parent_pos = GetParent(insert_pos);
             SwapIndexPositionInHeap(array[insert_pos], array[parent_pos], insert_pos, parent_pos);
             std::swap(array[insert_pos], array[parent_pos]);
@@ -128,18 +134,18 @@ public:
      * Delete the min from the heap and rebalances
      * @param min : stores the deleted [vertex, distance]
      */
-    float* DeleteMin(float min[2]) {
+    Node DeleteMin(Node min) {
         if (IsEmpty()) {
             std::cout << "Warning! There are no elements in the heap currently." << std::endl;
-            return 0;
+            return min;
         }
 
-        min[0] = array[0][0];
-        min[1] = array[0][1];
+        min.v = array[0].v;
+        min.dist = array[0].dist;
 
-        heap_vertex_pos[(int)(array[0][0])] = -1;
+        heap_vertex_pos[array[0].v] = -1;
         if (!IsEmpty()) {
-            heap_vertex_pos[(int)array[current_size-1][0]] = 0;
+            heap_vertex_pos[array[current_size-1].v] = 0;
         }
         array[0] = array[current_size-1];
         current_size--;
@@ -161,7 +167,7 @@ public:
             // iterate over the children to find the smallest value to swap with
             for (int i = 1; i < d + 1; i++) {
                 int child_pos = GetKthChild(parent_pos, i);
-                if ((child_pos < current_size) && (array[child_pos][1] < array[swap_pos][1])) {
+                if ((child_pos < current_size) && (array[child_pos].dist < array[swap_pos].dist)) {
                     swap_pos = child_pos;
                 }
             }
@@ -181,10 +187,11 @@ public:
      */
     void printHeap() {
         for (int i = 0; i < current_size; i++)
-            std::cout << "[" << array[i][0] << ", " << array[i][1] << "], ";
+            std::cout << "[" << array[i].v << ", " << array[i].dist << "], ";
         std::cout << std::endl;
     }
 };
+
 
 /*
  * Prim's algorithm
@@ -195,7 +202,8 @@ public:
 float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, int n, int dim) {
     float dist[n];
     float prev[n];
-    float v[2];
+    
+    Node v = {-1, -1};
 
     float sum = 0;
 
@@ -218,23 +226,22 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
     vertices[0] = 1;
     dist[0] = 0;
 
-    min_heap.Insert(0, (int)dist[0]);
+    min_heap.Insert(0, dist[0]);
 
     while (!min_heap.IsEmpty()) {
 
-        v[0] = (int)v[0];
-        min_heap.DeleteMin(v);
+        v = min_heap.DeleteMin(v);
 
         // mark removed vertex as visited
-        vertices[(int)v[0]] = 1;
-        sum += (float)dist[(int)v[0]];
+        vertices[v.v] = 1;
+        sum += dist[v.v];
 
         // iterate over edges of that vertex
         for (int w = 0; w < n; w++) {
             // check that this vertex is not itself & we haven't visited it before
-            if (((int)v[0] != w) && (vertices[w] == 0)) {
+            if ((v.v != w) && (vertices[w] == 0)) {
 
-                int vertex1 = (int)v[0];
+                int vertex1 = v.v;
                 int vertex2 = w;
 
                 float edge_weight;
@@ -257,7 +264,7 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
 
                 if (dist[w] > edge_weight) {
                     dist[w] = edge_weight;
-                    prev[w] = (int)v[0];
+                    prev[w] = v.v;
                     min_heap.Insert(w, dist[w]);
                 }
             }
@@ -399,17 +406,17 @@ int main(int argc, const char * argv[]) {
     std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
 
     //create and print out adj list
-    std::vector<std::list<node>> adjlist = adj_list(dim, n);
-
-    for (int i = 0; i < n; i++)
-    {
-        for (auto ci = adjlist[i].begin(); ci != adjlist[i].end(); ++ci)
-        {
-            node k = *ci;
-            std::cout<<k.weight<<" ";
-        }
-        std::cout<<std::endl;
-    }
+//    std::vector<std::list<node>> adjlist = adj_list(dim, n);
+//
+//    for (int i = 0; i < n; i++)
+//    {
+//        for (auto ci = adjlist[i].begin(); ci != adjlist[i].end(); ++ci)
+//        {
+//            node k = *ci;
+//            std::cout<<k.weight<<" ";
+//        }
+//        std::cout<<std::endl;
+//    }
 
 
     for (int i = 0; i < trials; i++) {
@@ -488,10 +495,10 @@ int main(int argc, const char * argv[]) {
 //    min_heap.Insert(4, 3);
 //    min_heap.Insert(4, 0);
 //    min_heap.printHeap();
-//    float v[2];
-//    min_heap.DeleteMin(v);
+//    Node v;
+//    v = min_heap.DeleteMin(v);
 //    min_heap.printHeap();
-//    min_heap.DeleteMin(v);
+//    v = min_heap.DeleteMin(v);
 //    min_heap.printHeap();
 //    min_heap.Insert(1, 3);
 //    min_heap.Insert(1, 3.22);
