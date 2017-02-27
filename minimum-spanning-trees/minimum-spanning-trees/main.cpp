@@ -14,7 +14,9 @@
 #include <vector>
 #include <list>
 #include <time.h>
-#include <windows.h>
+#include <fstream>
+
+clock_t start, end;
 
 struct Node {
     int v;
@@ -170,8 +172,10 @@ public:
             // iterate over the children to find the smallest value to swap with
             for (int i = 1; i < d + 1; i++) {
                 int child_pos = GetKthChild(parent_pos, i);
-                if ((child_pos < current_size) && (array[child_pos].dist < array[swap_pos].dist)) {
-                    swap_pos = child_pos;
+                if (child_pos < current_size) {
+                    if (array[child_pos].dist < array[swap_pos].dist) {
+                        swap_pos = child_pos;
+                    }
                 }
             }
             if (swap_pos != parent_pos) {
@@ -323,7 +327,11 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
     float sum = 0;
 
     // we compute the optimal children value for the d-ary heap as well
-    DHeap min_heap(n, 3);
+    int optimal_value = n/8;
+    if (n == 131072) {
+        optimal_value = n/16;
+    }
+    DHeap min_heap(n, optimal_value);
 
     // serves as our set to contain [1, 0] <-> [0th vertex is in MST, 1th vertex not in MST]
     int vertices[n];
@@ -390,49 +398,14 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
         }
     }
 
-
     std::cout << "Largest Edge for n = "<< n << " and dim = "<< dim<< " : " <<largest_edge << std::endl;
     return sum;
 }
 
-int main(int argc, const char * argv[]) {
-
-    if (argc != 5) {
-        printf("Invalid arguments.");
-        return 1;
-    }
-
-    // denotes # of vertices in the graph
-    int n = atoi(argv[2]);
-
-    // how many times to calculate prim
-    int trials = atoi(argv[3]);
-
-    // dimensons for the problem
-    int dim = atoi(argv[4]);
-
-    std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
-
-    float sum = 0.0;
-
-    //create and print out adj list
-//    std::vector<std::list<node>> adjlist = adj_list(dim, n);
-//
-//    for (int i = 0; i < n; i++)
-//    {
-//        for (auto ci = adjlist[i].begin(); ci != adjlist[i].end(); ++ci)
-//        {
-//            node k = *ci;
-//            std::cout<<k.weight<<" ";
-//        }
-//        std::cout<<std::endl;
-//    }
-
+float run_prims(int n, int trials, int dim) {
     srand((unsigned)time(NULL));
-    double seconds = 0.0;
+    float sum = 0.0;
     for (int i = 0; i < trials; i++) {
-        long int before = GetTickCount();
-
         if (dim == 0) {
             float x_coords[1];
             float y_coords[1];
@@ -490,14 +463,54 @@ int main(int argc, const char * argv[]) {
 
             sum += Prim(x_coords, y_coords, z_coords, v_coords, n, dim);
         }
-        long int after = GetTickCount();
-        seconds += (double) after - before;
+    }
+    return sum;
+}
+
+int main(int argc, const char * argv[]) {
+
+    if (argc != 5) {
+        printf("Invalid arguments.");
+        return 1;
     }
 
-    seconds /= 1000.0;
-    sum /= trials;
-    std::cout << "Time per trial: " << seconds/trials << "s" <<  std::endl;
-    std::cout << "Calculated sum: " << sum << std::endl;
+    // denotes # of vertices in the graph
+    int n = atoi(argv[2]);
+
+    // how many times to calculate prim
+    int trials = atoi(argv[3]);
+
+    // dimensons for the problem
+    int dim = atoi(argv[4]);
+
+    std::cout << "Command line args: " << n << " " << trials << " " << dim << std::endl;
+    
+    // code to run all the cases at once
+    // prepare variables
+    
+    int trials_test[14] = {5000, 5000, 5000, 1000, 200, 200, 100, 25, 10, 5, 5, 5, 5, 5};
+    int n_test[14] = {16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072};
+
+    std::ofstream myfile;
+    myfile.open("output.txt");
+    for (int a = 3; a < 5; a++) {
+        std::cout << "Dimension: " << a << std::endl;
+        if (a != 1) {
+            for (int b = 0; b < 14; b++) {
+                if (a == 3 & b < 13) {
+                    continue;
+                }
+                start = clock();
+                float sum;
+                sum = run_prims(n_test[b], trials_test[b], a);
+                end = clock();
+                double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+                std::cout << "n value: " << n_test[b] << ", sum: " << sum / trials_test[b] << ", time spent: " <<  time_spent << ", num trials: " << trials_test[b] << std::endl;
+                myfile << "dimension: " << a << ", n value: " << n_test[b] << ", sum: " << sum / trials_test[b] << ", time spent: " <<  time_spent << ", num trials: " << trials_test[b] << std::endl;
+            }
+        }
+    }
+    myfile.close();
 
     return 0;
 }
