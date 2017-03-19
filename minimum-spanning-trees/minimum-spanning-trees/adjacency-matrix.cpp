@@ -8,18 +8,16 @@
 
 #include "adjacency-matrix.hpp"
 #include <math.h>
-#include <time.h>
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
 
 /*
  * Generates and returns an adjacency matrix
- * @param n : # of vertices in the matrix
- * @param dim : dimension of the matrix
+ * @param MAX_ROW : number of rows
+ * @param MAX_COL : number of columns
  */
 template<int MAX_ROW, int MAX_COL>
-
 void MatrixGenerator(float (&matrix)[MAX_ROW][MAX_COL], int n, int dim) {
     srand((unsigned)time(NULL));
     
@@ -106,7 +104,6 @@ void MatrixGenerator(float (&matrix)[MAX_ROW][MAX_COL], int n, int dim) {
  * @param matrix : pointer to a 2d matrix
  */
 template<int MAX_ROW, int MAX_COL>
-
 void MatrixPrint(float (&matrix)[MAX_ROW][MAX_COL]) {
     for (int i = 0; i < MAX_ROW; i++) {
         for (int j = 0; j < MAX_COL; j++) {

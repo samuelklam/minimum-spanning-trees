@@ -10,6 +10,7 @@
 		812ACE491E61D29F00D20DFB /* d-heap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 812ACE471E61D29F00D20DFB /* d-heap.cpp */; };
 		812CCFAC1E6086A0002514ED /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 812CCFAB1E6086A0002514ED /* main.cpp */; };
 		81592F621E636F9400A2E80C /* adjacency-matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81592F601E636F9400A2E80C /* adjacency-matrix.cpp */; };
+		819ECCD61E7EE7EB004EB87B /* adjacency_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 819ECCD41E7EE7EB004EB87B /* adjacency_list.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		812CCFAB1E6086A0002514ED /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		81592F601E636F9400A2E80C /* adjacency-matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "adjacency-matrix.cpp"; sourceTree = "<group>"; };
 		81592F611E636F9400A2E80C /* adjacency-matrix.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "adjacency-matrix.hpp"; sourceTree = "<group>"; };
+		819ECCD41E7EE7EB004EB87B /* adjacency_list.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = adjacency_list.cpp; sourceTree = "<group>"; };
+		819ECCD51E7EE7EB004EB87B /* adjacency_list.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = adjacency_list.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				812CCFAB1E6086A0002514ED /* main.cpp */,
+				819ECCD41E7EE7EB004EB87B /* adjacency_list.cpp */,
+				819ECCD51E7EE7EB004EB87B /* adjacency_list.hpp */,
 				812ACE471E61D29F00D20DFB /* d-heap.cpp */,
 				812ACE481E61D29F00D20DFB /* d-heap.hpp */,
 				81592F601E636F9400A2E80C /* adjacency-matrix.cpp */,
@@ -129,6 +134,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				819ECCD61E7EE7EB004EB87B /* adjacency_list.cpp in Sources */,
 				81592F621E636F9400A2E80C /* adjacency-matrix.cpp in Sources */,
 				812ACE491E61D29F00D20DFB /* d-heap.cpp in Sources */,
 				812CCFAC1E6086A0002514ED /* main.cpp in Sources */,

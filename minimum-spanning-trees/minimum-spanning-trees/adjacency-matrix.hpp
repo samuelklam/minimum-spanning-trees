@@ -11,4 +11,10 @@
 
 #include <stdio.h>
 
+template<int MAX_ROW, int MAX_COL>
+void MatrixGenerator(float (&matrix)[MAX_ROW][MAX_COL], int n, int dim);
+
+template<int MAX_ROW, int MAX_COL>
+void MatrixPrint(float (&matrix)[MAX_ROW][MAX_COL]);
+
 #endif /* adjacency_matrix_hpp */
