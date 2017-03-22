@@ -18,10 +18,10 @@ clock_t start, end;
 /*
  * Prim's algorithm
  * @param *x_coords : pointer to x_coordinate array (denotes 1D)
- * @param *y_coords : poiner to y_coordinate array (denotes 2D)
- * @param *z_coords : poiner to z_coordinate array (denotes 3D)
- * @param *v_coords : poiner to v_coordinate array (denotes 4D)
- * @param n : number of vertexes in the graph
+ * @param *y_coords : pointer to y_coordinate array (denotes 2D)
+ * @param *z_coords : pointer to z_coordinate array (denotes 3D)
+ * @param *v_coords : pointer to v_coordinate array (denotes 4D)
+ * @param n : # of vertexes in the graph
  * @param dim : dimension to calculate
  * @return sum : the sum of the weight of the MST
  */
