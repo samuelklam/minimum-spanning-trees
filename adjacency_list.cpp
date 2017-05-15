@@ -7,11 +7,6 @@
 //
 
 #include "adjacency_list.hpp"
-#include <stdio.h>
-#include <iostream>
-#include <list>
-#include <vector>
-#include <math.h>
 
 std::vector<std::list<node>> adj_list(int dim, int n){
     std::vector<std::list<node>> adjlist;
@@ -19,7 +14,6 @@ std::vector<std::list<node>> adj_list(int dim, int n){
     std::list<node> clean;
     clean.clear();
     srand((unsigned)time(NULL));
-    // adj list
     
     for (int i = 0; i < n; i++)
     {

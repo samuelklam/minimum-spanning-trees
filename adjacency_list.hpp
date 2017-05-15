@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <list>
 #include <vector>
+#include <stdio.h>
+#include <iostream>
+#include <math.h>
 
 /*
  * Using adjacency list
