@@ -91,7 +91,7 @@ float Prim(float *x_coords, float *y_coords, float *z_coords, float *v_coords, i
                     edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)) + (pow(z_coords[vertex1] - z_coords[vertex2], 2.0)));
                 }
 
-                else if (dim == 4) {
+                else {
                     edge_weight = sqrt(pow(x_coords[vertex1] - x_coords[vertex2], 2.0) + (pow(y_coords[vertex1] - y_coords[vertex2], 2.0)) + (pow(z_coords[vertex1] - z_coords[vertex2], 2.0)) + (pow(v_coords[vertex1] - v_coords[vertex2], 2.0)));
                 }
 

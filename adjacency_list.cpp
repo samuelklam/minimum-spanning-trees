@@ -8,8 +8,8 @@
 
 #include "adjacency_list.hpp"
 
-std::vector<std::list<node>> adj_list(int dim, int n){
-    std::vector<std::list<node>> adjlist;
+std::vector< std::list<node> > adj_list(int dim, int n) {
+    std::vector< std::list<node> > adjlist;
     
     std::list<node> clean;
     clean.clear();

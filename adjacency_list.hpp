@@ -24,6 +24,6 @@ struct node {
     float weight;
 };
 
-std::vector<std::list<node>> adj_list(int dim, int n);
+std::vector< std::list<node> > adj_list(int dim, int n);
 
 #endif /* adjacency_list_hpp */
